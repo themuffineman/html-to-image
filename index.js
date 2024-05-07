@@ -34,7 +34,7 @@ app.get('/screenshot', async (req , res)=>{
         body{
             margin: 0;
             padding: 0;
-            background-image: url('https://i.ibb.co/mSmSSvJ/template-bg.jpg');
+            background-image: url('https://cdn.builder.io/api/v1/image/assets/TEMP/7d7f4c2c557b6c34a84a34bd839847f95120f9763904a4ef6ae674a64edb2cb7?placeholderIfAbsent=true');
             background-position: center;
             background-repeat: no-repeat;
             background-size: cover;
@@ -307,15 +307,11 @@ app.get('/screenshot', async (req , res)=>{
         console.log('Puppeteer has launched')
         const page = await browser.newPage()
         console.log('New page opened')
-        await page.setViewport({ width: 1440, height: 630 });
-        page.setDefaultNavigationTimeout(100000)
+        await page.setViewport({ width: 1440, height: 800 });
+        page.setDefaultNavigationTimeout(120000)
         page.setContent(html)
         console.log('HTML set!')
-        await new Promise((resolve, reject)=>{
-            setTimeout(()=>{
-                resolve()
-            },10000)
-        })
+        await page.waitForNavigation({ waitUntil: 'networkidle0' });
         const screenshot = await page.screenshot({ encoding: 'base64', fullpage: true })
         console.log('Screenshot taken')
     
