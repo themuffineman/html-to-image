@@ -321,5 +321,4 @@ app.get('/screenshot', async (req , res)=>{
         console.error(error)
         res.send(`Error', ${error}`).status(500)
     }
-    
 })
