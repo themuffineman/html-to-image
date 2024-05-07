@@ -278,7 +278,7 @@ app.get('/screenshot', async (req , res)=>{
             </div>
             <div class="hero-section">
                 <div class="hero-text">
-                    <h1>Firma Architects</h1>
+                    <h1>${name}</h1>
                     <h2>Award Wining Home Design</h2>
                 </div>
                 <div class="hero-cta">
