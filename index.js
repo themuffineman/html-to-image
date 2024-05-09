@@ -1,5 +1,8 @@
 import express from 'express'
 import puppeteer from 'puppeteer'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const PORT = 8080
 
@@ -303,7 +306,16 @@ app.get('/screenshot', async (req , res)=>{
     </body>
     </html>`
     try {
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+          timeout: 180000,
+          executablePath: process.env.NODE_ENV === 'production' ?
+              process.env.PUPPETERR_EXECUTABLE_PATH:
+              puppeteer.executablePath(),
+          args: [
+              `--disable-setuid-sandbox`,
+              `--disable-dev-shm-usage`
+          ],
+        });
         console.log('Puppeteer has launched')
         const page = await browser.newPage()
         console.log('New page opened')
