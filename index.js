@@ -1,12 +1,18 @@
 import express from 'express'
 import puppeteer from 'puppeteer'
 import dotenv from 'dotenv'
+import cors from 'cors'
+
 
 dotenv.config()
 
 const PORT = 8080
 
 const app = express()
+
+app.use(cors({
+  origin: '*'
+}))
 
 app.listen(PORT, ()=> {console.log(`Server listening on port ${PORT}`)})
 
