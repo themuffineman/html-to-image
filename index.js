@@ -41,6 +41,7 @@ app.listen(PORT, ()=> {console.log(`Server listening on port ${PORT}`)})
 
 app.get('/screenshot', async (req , res)=>{
     const {name} = req.query
+    let page
     console.log(`Name: ${name}`)
     const html = `<!DOCTYPE html>
     <html lang="en">
@@ -335,7 +336,7 @@ app.get('/screenshot', async (req , res)=>{
     </body>
     </html>`
     try {
-        const page = await browser.newPage()
+        page = await browser.newPage()
         console.log('New page opened')
         await page.setViewport({ width: 1440, height: 800 });
         page.setDefaultNavigationTimeout(120000)
@@ -346,9 +347,10 @@ app.get('/screenshot', async (req , res)=>{
         console.log('Screenshot taken')
         res.json({src: screenshot}).status(200)
         
-    } catch (error) {
+      } catch (error) {
         console.error(error)
         res.send(`Error', ${error}`).status(500)
-    }finally{
+      }finally{
+        await page.close()
     }
 })
