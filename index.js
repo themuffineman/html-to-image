@@ -1,5 +1,5 @@
 import express from 'express'
-import puppeteer from 'puppeteer'
+import puppeteer, { Page } from 'puppeteer'
 import dotenv from 'dotenv'
 import cors from 'cors'
 
@@ -7,8 +7,31 @@ import cors from 'cors'
 dotenv.config()
 
 const PORT = 8080
+let browser;
 
 const app = express()
+
+async function launchPuppeteer(){
+  
+  browser = await puppeteer.launch({
+   timeout: 180000,
+   executablePath: process.env.NODE_ENV === 'production' ?
+       process.env.PUPPETERR_EXECUTABLE_PATH:
+       puppeteer.executablePath(),
+   args: [
+       `--disable-setuid-sandbox`,
+       `--disable-dev-shm-usage`
+  ]})
+
+  console.log('Puppeteer has launched')
+}
+
+app.use(async (req, res, next) => {
+  if (!browser) {
+      await launchPuppeteer();
+  }
+  next();
+});
 
 app.use(cors({
   origin: '*'
@@ -312,17 +335,6 @@ app.get('/screenshot', async (req , res)=>{
     </body>
     </html>`
     try {
-        const browser = await puppeteer.launch({
-          timeout: 180000,
-          executablePath: process.env.NODE_ENV === 'production' ?
-              process.env.PUPPETERR_EXECUTABLE_PATH:
-              puppeteer.executablePath(),
-          args: [
-              `--disable-setuid-sandbox`,
-              `--disable-dev-shm-usage`
-          ],
-        });
-        console.log('Puppeteer has launched')
         const page = await browser.newPage()
         console.log('New page opened')
         await page.setViewport({ width: 1440, height: 800 });
@@ -332,11 +344,11 @@ app.get('/screenshot', async (req , res)=>{
         await page.waitForNavigation({ waitUntil: 'networkidle0' });
         const screenshot = await page.screenshot({ encoding: 'base64', fullpage: true })
         console.log('Screenshot taken')
-    
         res.json({src: screenshot}).status(200)
         
     } catch (error) {
         console.error(error)
         res.send(`Error', ${error}`).status(500)
+    }finally{
     }
 })
