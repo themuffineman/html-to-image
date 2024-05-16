@@ -10,6 +10,7 @@ const PORT = 8080
 let browser;
 
 const app = express()
+app.listen(PORT, ()=> {console.log(`Server listening on port ${PORT}`)})
 
 async function launchPuppeteer(){
   
@@ -38,7 +39,6 @@ app.use(cors({
   origin: '*'
 }))
 
-app.listen(PORT, ()=> {console.log(`Server listening on port ${PORT}`)})
 
 app.get('/screenshot', async (req , res)=>{
     const {name} = req.query
