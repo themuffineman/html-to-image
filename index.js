@@ -3,46 +3,21 @@ import puppeteer, { Page } from 'puppeteer'
 import dotenv from 'dotenv'
 import cors from 'cors'
 
-
 dotenv.config()
 
 const PORT = 8080
-let browser;
 
 const app = express()
 app.listen(PORT, ()=> {console.log(`Server listening on port ${PORT}`)})
-
-async function launchPuppeteer(){
-  
-  browser = await puppeteer.launch({
-   timeout: 180000,
-   executablePath: process.env.NODE_ENV === 'production' ?
-       process.env.PUPPETERR_EXECUTABLE_PATH:
-       puppeteer.executablePath(),
-   args: [
-       `--disable-setuid-sandbox`,
-       `--disable-dev-shm-usage`
-  ]})
-
-  console.log('Puppeteer has launched')
-}
-
-app.use(async (req, res, next) => {
-  if (!browser) {
-    await launchPuppeteer();
-    console.log('Puppeteer is live')
-  }
-  next();
-});
 
 app.use(cors({
   origin: '*'
 }))
 
-
 app.get('/screenshot', async (req , res)=>{
     const {name} = req.query
     let page
+    let browser
     console.log(`Name: ${name}`)
     const html = `<!DOCTYPE html>
     <html lang="en">
@@ -336,22 +311,34 @@ app.get('/screenshot', async (req , res)=>{
         </main>
     </body>
     </html>`
-    try {
-        page = await browser.newPage()
-        console.log('New page opened')
-        await page.setViewport({ width: 1440, height: 800 });
-        page.setDefaultNavigationTimeout(120000)
-        page.setContent(html)
-        console.log('HTML set!')
-        await page.waitForNavigation({ waitUntil: 'networkidle0' });
-        const screenshot = await page.screenshot({ encoding: 'base64', fullpage: true })
-        console.log('Screenshot taken')
-        res.json({src: screenshot}).status(200)
+    try{
+      if(!browser){
+        browser = await puppeteer.launch({
+          timeout: 180000,
+          executablePath: process.env.NODE_ENV === 'production' ?
+            process.env.PUPPETERR_EXECUTABLE_PATH:
+            puppeteer.executablePath(),
+          args: [
+            `--disable-setuid-sandbox`,
+            `--disable-dev-shm-usage`
+        ]})
+        console.log('Puppeteer is up and running')
+      }
+      page = await browser.newPage()
+      console.log('New page opened')
+      await page.setViewport({ width: 1440, height: 800 });
+      page.setDefaultNavigationTimeout(120000)
+      page.setContent(html)
+      console.log('HTML set!')
+      await page.waitForNavigation({ waitUntil: 'networkidle0' });
+      const screenshot = await page.screenshot({ encoding: 'base64', fullpage: true })
+      console.log('Screenshot taken')
+      res.json({src: screenshot}).status(200)
         
-      } catch (error) {
-        console.error(error)
-        res.send({error}).status(500)
-      }finally{
-        await page.close()
+    } catch(error) {
+      console.error(error)
+      res.send({error}).status(500)
+    }finally{
+      await page.close()
     }
 })
