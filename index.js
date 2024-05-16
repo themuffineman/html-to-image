@@ -28,7 +28,8 @@ async function launchPuppeteer(){
 
 app.use(async (req, res, next) => {
   if (!browser) {
-      await launchPuppeteer();
+    await launchPuppeteer();
+    console.log('Puppeteer is live')
   }
   next();
 });
