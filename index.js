@@ -444,7 +444,7 @@ app.get('/screenshot', async (req , res)=>{
             margin-top: 2rem;
         }
         .scroll{
-            width: 50px;
+            width: 120px;
             margin-top: 2rem;
     
         }
