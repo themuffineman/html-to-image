@@ -16,9 +16,6 @@ app.use(cors({
 
 app.get('/screenshot', async (req , res)=>{
     const {name, niche} = req.query
-    if(!niche){
-      throw new Error('Niche Undefined')
-    }
     let page
     let browser
     console.log(`Name: ${name}, Niche: ${niche}`)
