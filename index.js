@@ -15,11 +15,14 @@ app.use(cors({
 }))
 
 app.get('/screenshot', async (req , res)=>{
-    const {name} = req.query
+    const {name, niche} = req.query
+    if(!niche){
+      throw new Error('Niche Undefined')
+    }
     let page
     let browser
     console.log(`Name: ${name}`)
-    const html = `<!DOCTYPE html>
+    const architecthtml = `<!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -311,6 +314,146 @@ app.get('/screenshot', async (req , res)=>{
         </main>
     </body>
     </html>`
+    const interiorHtml = `<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Proza+Libre:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+    </head>
+    
+    <body>
+        <main>
+            <nav>
+                <div>Residential</div>
+                <div>Commercial</div>
+                <div>Multi-Famly</div>
+                <div>Projects</div>
+                <div>About</div>
+            </nav>
+    
+            <div class="hero-main">
+                <h1>
+                    ${name}
+                </h1>
+                <p>
+                    With a keen eye for details and passion for perfection, we craft interiors that not only leave a lasting impression but also become an integral part of your space's history for years to come
+                </p>
+                <button>
+                    Contact Us
+                </button>
+                <img class="logos" src="https://cdn.builder.io/api/v1/image/assets/TEMP/c24a537222d2641930cff2161ac8d47b7bd6ee9a307382b5f83714553ad1e385?placeholderIfAbsent=true" alt="">
+                <img class="scroll" src="https://cdn.builder.io/api/v1/image/assets/TEMP/7da144bbeaf2256720d2bdecc561f97d64279bd7d6c8e1bf1032fc02e2e87fd8?placeholderIfAbsent=true" alt="">
+            </div>
+    
+        </main>
+    </body>
+    <style>
+        *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body{
+            width: 100vw;
+            height: 100vh;
+            background-image: url('https://cdn.builder.io/api/v1/image/assets/TEMP/13dfc707b556688fd4d75791e6b0930267a5f96e45633027ea3c6500c94681eb?placeholderIfAbsent=true');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            position: relative;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        main{
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.37);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            padding-top: 2rem;
+        }
+        nav{
+            width: 50%;
+            height: max-content;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        nav div{
+           flex: 1;
+           color: rgb(255, 255, 255);;
+           font-family: "Outfit", sans-serif;
+           font-size: medium;
+        }
+        .second-section{
+            display: flex;
+            flex-direction: column;
+            align-self: self-end;
+            width: 100%;
+        }
+        .hero-main{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+        }
+        .hero-main h1{
+            color: white;
+            font-size: 8rem;
+            letter-spacing: -5px;
+            font-family: "Proza Libre", sans-serif;
+            font-weight: lighter;
+            text-align: center;
+        }
+        .hero-main p{
+            color: white;
+            font-size: large;
+            font-family: "Outfit", sans-serif;
+            width: 69%;
+            text-align: center;
+        }
+        .hero-main button{
+            width: 16rem;
+            height: 5rem;
+            border-radius: 999px;
+            padding: 1rem;
+            color: black;
+            background-color: #ffff;
+            border: none;
+            font-family: "Proza Libre", sans-serif;
+            font-size: 2rem;
+            margin-top: 2rem;
+        }
+        .images{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+        .logos{
+            width: 700px;
+            margin-top: 2rem;
+        }
+        .scroll{
+            width: 50px;
+            margin-top: 2rem;
+    
+        }
+        
+    </style>
+    </html>`
     try{
       if(!browser){
         browser = await puppeteer.launch({
@@ -326,9 +469,13 @@ app.get('/screenshot', async (req , res)=>{
       }
       page = await browser.newPage()
       console.log('New page opened')
-      await page.setViewport({ width: 1440, height: 800 });
+      await page.setViewport({ width: 1440, height: 950 });
       page.setDefaultNavigationTimeout(120000)
-      page.setContent(html)
+      if(niche === 'architecture'){
+        page.setContent(architecthtml)
+      }else if(niche === 'interior'){
+        page.setContent(interiorHtml)
+      }
       console.log('HTML set!')
       await page.waitForNavigation({ waitUntil: 'networkidle0' });
       const screenshot = await page.screenshot({ encoding: 'base64', fullpage: true })
