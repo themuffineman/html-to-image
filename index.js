@@ -21,7 +21,7 @@ app.get('/screenshot', async (req , res)=>{
     }
     let page
     let browser
-    console.log(`Name: ${name}`)
+    console.log(`Name: ${name}, Niche: ${niche}`)
     const architecthtml = `<!DOCTYPE html>
     <html lang="en">
     <head>
