@@ -31,11 +31,7 @@ app.get("/screenshot", async (req, res) => {
       browser = await puppeteer.launch({
         timeout: 180000,
 
-        args: [
-          `--disable-setuid-sandbox`,
-          `--disable-dev-shm-usage`,
-          `--no-sandbox,`,
-        ],
+        args: [`--no-sandbox,`],
       });
       console.log("Puppeteer is up and running");
     }
