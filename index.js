@@ -2,7 +2,7 @@ import express from "express";
 import puppeteer, { Page } from "puppeteer";
 import dotenv from "dotenv";
 import cors from "cors";
-import { archiHTML, interiorHtml } from "./html";
+import { archiHTML, interiorHtml } from "./html.js";
 
 dotenv.config();
 
