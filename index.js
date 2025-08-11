@@ -33,7 +33,8 @@ app.get("/screenshot", async (req, res) => {
 
         args: [
           `--disable-setuid-sandbox`,
-          `--disable-dev-shm-usage``--no-sandbox,`,
+          `--disable-dev-shm-usage`,
+          `--no-sandbox,`,
         ],
       });
       console.log("Puppeteer is up and running");
