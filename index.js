@@ -3,16 +3,12 @@ import puppeteer, { Page } from "puppeteer";
 import dotenv from "dotenv";
 import cors from "cors";
 import { archiHTML, interiorHTML } from "./html.js";
-
 dotenv.config();
-
 const PORT = 8080;
-
 const app = express();
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
-
 app.use(
   cors({
     origin: "*",
@@ -31,7 +27,7 @@ app.get("/screenshot", async (req, res) => {
       browser = await puppeteer.launch({
         timeout: 180000,
 
-        args: [`--no-sandbox,`],
+        args: [`--no-sandbox`],
       });
       console.log("Puppeteer is up and running");
     }
