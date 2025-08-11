@@ -34,10 +34,10 @@ app.get("/screenshot", async (req, res) => {
     page = await browser.newPage();
     console.log("New page opened");
     await page.setViewport({ width: 1440, height: 950 });
-    page.setDefaultNavigationTimeout(120000);
-    if (niche === "architecture") {
+    page.setDefaultNavigationTimeout(60000);
+    if (niche.includes("architecture")) {
       page.setContent(architecthtml);
-    } else if (niche === "interior") {
+    } else if (niche.includes("interior")) {
       page.setContent(interiorHtml);
     }
     console.log("HTML set!");
