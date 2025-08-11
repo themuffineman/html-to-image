@@ -291,7 +291,7 @@ export const archiHTML = (name) =>
         </main>
     </body>
     </html>`;
-export const interiorHtml = (name) =>
+export const interiorHTML = (name) =>
   `<!DOCTYPE html>
     <html lang="en">
     <head>

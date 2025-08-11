@@ -2,7 +2,7 @@ import express from "express";
 import puppeteer, { Page } from "puppeteer";
 import dotenv from "dotenv";
 import cors from "cors";
-import { archiHTML, interiorHtml } from "./html.js";
+import { archiHTML, interiorHTML } from "./html.js";
 
 dotenv.config();
 
@@ -25,7 +25,7 @@ app.get("/screenshot", async (req, res) => {
   let browser;
   console.log(`Name: ${name}, Niche: ${niche}`);
   const architecthtml = archiHTML(name);
-  const interiorHtml = interiorHtml(name);
+  const interiorHtml = interiorHTML(name);
   try {
     if (!browser) {
       browser = await puppeteer.launch({
