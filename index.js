@@ -35,7 +35,7 @@ app.get("/screenshot", async (req, res) => {
     console.log("New page opened");
     await page.setViewport({ width: 1440, height: 950 });
     page.setDefaultNavigationTimeout(60000);
-    if (niche.includes("architecture")) {
+    if (niche.includes("architects")) {
       page.setContent(architecthtml);
     } else if (niche.includes("interior")) {
       page.setContent(interiorHtml);
